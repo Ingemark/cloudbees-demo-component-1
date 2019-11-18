@@ -1,7 +1,12 @@
 #!groovy
 
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.5.0-jdk-8'
+        }
+    }
+
     parameters {
         string(name: 'APP_VERSION', description: 'Demo application version')
     }
@@ -14,6 +19,8 @@ pipeline {
             steps{
                 echo 'mvn package'
                 sh 'ls -la'
+                sh 'pwd'
+                sh 'which mvn'
             }
         }
         stage('Publishing artifacts'){
@@ -31,7 +38,8 @@ pipeline {
     }
     post {
         changed {
-            mail(to: "josip.gracin@ingemark.com", subject: "CloudBees job '${JOB_NAME}' build ${BUILD_DISPLAY_NAME} status has changed to: ${currentBuild.currentResult}!", body: "Please go to ${BUILD_URL} for details.")
+            echo "CloudBees job '${JOB_NAME}' build ${BUILD_DISPLAY_NAME} status has changed to: ${currentBuild.currentResult}! Please go to ${BUILD_URL} for details."
+            //mail(to: "josip.gracin@ingemark.com", subject: "CloudBees job '${JOB_NAME}' build ${BUILD_DISPLAY_NAME} status has changed to: ${currentBuild.currentResult}!", body: "Please go to ${BUILD_URL} for details.")
         }
     }
 }

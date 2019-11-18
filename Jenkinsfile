@@ -1,6 +1,7 @@
 #!groovy
 
 pipeline {
+    agent any
     parameters {
         string(name: 'APP_VERSION', description: 'Demo application version')
     }
